@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventory Summary Report</title>
+    <link rel="stylesheet" href="Admin_ReportIS.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script> 
+</head>
+
+<body>
+    
+    <!-- for header part -->
+    <header>
+        <div class="logosec"><img src="./logo.png"
+                            class="icn menuicn" 
+                            id="menuicn" 
+                            alt="menu-icon">
+            <div class="logo">UCGS Inventory</div>
+        </div>
+
+        <div class="searchbar">
+            <input type="text" id="search" placeholder="Search">
+            <div class="searchbtn">
+              <img src=
+"https://media.geeksforgeeks.org/wp-content/uploads/20221210180758/Untitled-design-(28).png"
+                    class="icn srchicn" 
+                    alt="search-icon">
+              </div>
+        </div>
+
+        <div class="message">
+            <div class="circle"></div>
+            <img src=
+"https://media.geeksforgeeks.org/wp-content/uploads/20221210183322/8.png" 
+                 class="icn" 
+                 alt="">
+            <div class="dp">
+              <img src=
+"https://media.geeksforgeeks.org/wp-content/uploads/20221210180014/profile-removebg-preview.png"
+                    class="dpicn" 
+                    alt="dp">
+              </div>
+        </div>
+    </header>
+
+    <div class="main-container">
+        <div class="navcontainer">
+            <nav class="nav">
+                <div class="nav-upper-options">
+                    <div class="nav-option option1">
+                        <img src=
+"https://media.geeksforgeeks.org/wp-content/uploads/20221210182148/Untitled-design-(29).png"
+                            class="nav-img" 
+                            alt="dashboard">
+                        <h3> Dashboard</h3>
+                    </div>
+
+                    <div class="option2 nav-option">
+                        <img src=
+"https://media.geeksforgeeks.org/wp-content/uploads/20221210183322/9.png"
+                            class="nav-img" 
+                            alt="articles">
+                        <h3> Items</h3>
+                    </div>
+
+                    <div class="nav-option option3">
+                        <img src=
+"https://media.geeksforgeeks.org/wp-content/uploads/20221210183320/5.png"
+                            class="nav-img" 
+                            alt="report">
+                        <h3> Request</h3>
+                    </div>
+
+                    <div class="nav-option option4">
+                        <img src=
+"https://media.geeksforgeeks.org/wp-content/uploads/20221210183321/6.png"
+                            class="nav-img" 
+                            alt="institution">
+                        <h3> Add Items</h3>
+                    </div>
+                    
+                    <div class="nav-option option5" onclick="myFunction()" >
+                        <div class="dropbtn" class="dropdown" >
+                            <img src="https://media.geeksforgeeks.org/wp-content/uploads/20221210183323/10.png"
+                                class="nav-img" 
+                                alt="blog">
+                            <h3> Report</h3>
+                            <div id="myDropdown" class="dropdown-content">
+                                <a href="Admin_Report_InventorySummary.html">Inventory Summary</a>
+                                <a href="Admin_Report_TransactionHistory.html">Transaction History</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="nav-option option6">
+                        <img src=
+"https://media.geeksforgeeks.org/wp-content/uploads/20221210183320/4.png"
+                            class="nav-img" 
+                            alt="settings">
+                        <h3> Accounts</h3>
+                    </div>
+
+                    <div class="nav-option logout">
+                        <img src=
+"https://media.geeksforgeeks.org/wp-content/uploads/20221210183321/7.png"
+                            class="nav-img" 
+                            alt="logout">
+                        <h3>Logout</h3>
+                    </div>
+
+                </div>
+            </nav>
+        </div>
+
+        <div class="main">
+            <div class="headings">
+                <h2>Inventory Summary</h2>
+                <div class="sortDrop">
+                <label for="sort">Sort</label>
+                <input type="text" id="sort" class="sortDrop-input" placeholder="Sort by" readonly />
+                    <span class="sortDrop-arrow">&#9660;</span>
+                    <div class="sortDrop-content">
+                        <a href="#" data-value="itemNo">Item No.</a>
+                        <a href="#" data-value="updateDate">Last Updated</a>
+                        <a href="#" data-value="modelNo">Model No.</a>
+                        <a href="#" data-value="items">Item</a>
+                        <a href="#" data-value="itemDesc">Item Description</a>
+                        <a href="#" data-value="supplierName">Supplier</a>
+                        <a href="#" data-value="pricePerItem">Price/Item</a>
+                        <a href="#" data-value="quantity">Quantity</a>
+                        <a href="#" data-value="unit">Unit</a>
+                        <a href="#" data-value="status">Status</a>
+                      </div>
+                </div>
+                <div class="filterDrop">
+                    <label for="filter">Filter</label>
+                    <input type="text" id="filter" class="filterDrop-input" placeholder="Filter by" readonly />
+                        <span class="filterDrop-arrow">&#9660;</span>
+                        <div class="filterDrop-content">
+                          <a href="#" data-value="consumable">Consumable</a>
+                          <a href="#" data-value="nonConsumable">Non-Consumable</a>
+                          <a href="#" data-value="supplier">Supplier</a>
+                          <a href="#" data-value="inStock">In Stock</a>
+                          <a href="#" data-value="borrowed">Borrowed</a>
+                          <a href="#" data-value="used">Used</a>
+                          <a href="#" data-value="damaged">Damaged</a>
+                          <a href="#" data-value="donated">Donated</a>
+                        </div>
+                    </div>
+                <div class="topButton">
+                    <button onclick="exportToExcel()">DOWNLOAD AS XLSX</button>
+                    <button onclick="exportToPDF()">DOWNLOAD AS PDF</button>
+                </div>
+            </div>
+
+            <div id="invenTbl" class="table-container">
+                <table id="invenTable">
+                    <thead>
+                        <tr>
+                            <th>Item No.</th>
+                            <th>Last Updated</th>
+                            <th>Model No.</th>
+                            <th>Item</th>
+                            <th>Item Description</th>
+                            <th>Supplier</th>
+                            <th>Price/Item(Php)</th>
+                            <th>Quantity</th>
+                            <th>Unit</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>001</td>
+                            <td>2025-01-10</td>
+                            <td>1001</td>
+                            <td>Candle</td>
+                            <td>Consumable</td>
+                            <td>Holy Supplies Co.</td>
+                            <td>150.00</td>
+                            <td>200</td>
+                            <td>pcs</td>
+                            <td>In stock</td>
+                        </tr>
+                        <tr>
+                            <td>002</td>
+                            <td>2025-01-15</td>
+                            <td>1002</td>
+                            <td>Chalice</td>
+                            <td>Non-consumable</td>
+                            <td>Church Goods Inc.</td>
+                            <td>6,000.00</td>
+                            <td>5</td>
+                            <td>pcs</td>
+                            <td>In stock</td>
+                        </tr>
+                        <tr>
+                            <td>003</td>
+                            <td>2025-01-12</td>
+                            <td>1003</td>
+                            <td>Bible</td>
+                            <td>Non-consumable</td>
+                            <td>Scripture House</td>
+                            <td>500.00</td>
+                            <td>50</td>
+                            <td>pcs</td>
+                            <td>Donated</td>
+                        </tr>
+                        <tr>
+                            <td>004</td>
+                            <td>2025-01-18</td>
+                            <td>1004</td>
+                            <td>Chair</td>
+                            <td>Non-consumable</td>
+                            <td>FurniBless Supplies</td>
+                            <td>1,200.00</td>
+                            <td>100</td>
+                            <td>pcs</td>
+                            <td>In stock</td>
+                        </tr>
+                        <tr>
+                            <td>005</td>
+                            <td>2025-01-08</td>
+                            <td>1005</td>
+                            <td>Missalette</td>
+                            <td>Consumable</td>
+                            <td>Liturgical Press</td>
+                            <td>80.00</td>
+                            <td>500</td>
+                            <td>pcs</td>
+                            <td>In stock</td>
+                        </tr>
+                        <tr>
+                            <td>006</td>
+                            <td>2025-01-09</td>
+                            <td>1006</td>
+                            <td>Hymnal</td>
+                            <td>Non-consumable</td>
+                            <td>Song of Praise</td>
+                            <td>350.00</td>
+                            <td>30</td>
+                            <td>pcs</td>
+                            <td>Used</td>
+                        </tr>
+                        <tr>
+                            <td>007</td>
+                            <td>2025-01-07</td>
+                            <td>1007</td>
+                            <td>Altar Cloth</td>
+                            <td>Non-consumable</td>
+                            <td>Holy Fabric Co.</td>
+                            <td>800.00</td>
+                            <td>10</td>
+                            <td>pcs</td>
+                            <td>In stock</td>
+                        </tr>
+                        <tr>
+                            <td>008</td>
+                            <td>2025-01-05</td>
+                            <td>1008</td>
+                            <td>Processional Cross</td>
+                            <td>Non-consumable</td>
+                            <td>Faith Craft</td>
+                            <td>12,000.00</td>
+                            <td>2</td>
+                            <td>pcs</td>
+                            <td>In stock</td>
+                        </tr>
+                        <tr>
+                            <td>009</td>
+                            <td>2025-01-03</td>
+                            <td>1009</td>
+                            <td>Altar Bell</td>
+                            <td>Non-consumable</td>
+                            <td>Church Bell Makers</td>
+                            <td>3,500.00</td>
+                            <td>1</td>
+                            <td>pcs</td>
+                            <td>Damaged</td>
+                        </tr>
+                        <tr>
+                            <td>010</td>
+                            <td>2025-01-02</td>
+                            <td>1010</td>
+                            <td>Incense</td>
+                            <td>Consumable</td>
+                            <td>Sacred Aroma Co.</td>
+                            <td>250.00</td>
+                            <td>20</td>
+                            <td>boxes</td>
+                            <td>In stock</td>
+                        </tr>
+                        <tr>
+                            <td>011</td>
+                            <td>2025-01-15</td>
+                            <td>1011</td>
+                            <td>Confessional Curtain</td>
+                            <td>Non-consumable</td>
+                            <td>Holy Drapes</td>
+                            <td>5,000.00</td>
+                            <td>4</td>
+                            <td>pcs</td>
+                            <td>Used</td>
+                        </tr>
+                        <tr>
+                            <td>012</td>
+                            <td>2025-01-12</td>
+                            <td>1012</td>
+                            <td>Holy Water Bottle</td>
+                            <td>Consumable</td>
+                            <td>Divine Supplies</td>
+                            <td>60.00</td>
+                            <td>300</td>
+                            <td>pcs</td>
+                            <td>In stock</td>
+                        </tr>
+                        <tr>
+                            <td>013</td>
+                            <td>2025-01-14</td>
+                            <td>1013</td>
+                            <td>Pew</td>
+                            <td>Non-consumable</td>
+                            <td>FurniBless Supplies</td>
+                            <td>15,000.00</td>
+                            <td>20</td>
+                            <td>pcs</td>
+                            <td>In stock</td>
+                        </tr>
+                        <tr>
+                            <td>014</td>
+                            <td>2025-01-11</td>
+                            <td>1014</td>
+                            <td>Vestments</td>
+                            <td>Non-consumable</td>
+                            <td>Liturgical Garments Co.</td>
+                            <td>2,500.00</td>
+                            <td>10</td>
+                            <td>sets</td>
+                            <td>Borrowed</td>
+                        </tr>
+                        <tr>
+                            <td>015</td>
+                            <td>2025-01-13</td>
+                            <td>1015</td>
+                            <td>Rosary</td>
+                            <td>Consumable</td>
+                            <td>Holy Beads Supply</td>
+                            <td>100.00</td>
+                            <td>500</td>
+                            <td>pcs</td>
+                            <td>Donated</td>
+                        </tr>
+                        <tr>
+                            <td>016</td>
+                            <td>2025-01-16</td>
+                            <td>1016</td>
+                            <td>Tabernacle</td>
+                            <td>Non-consumable</td>
+                            <td>Faith Craft</td>
+                            <td>50,000.00</td>
+                            <td>1</td>
+                            <td>pcs</td>
+                            <td>In stock</td>
+                        </tr>
+                        <tr>
+                            <td>017</td>
+                            <td>2025-01-04</td>
+                            <td>1017</td>
+                            <td>Cruet</td>
+                            <td>Non-consumable</td>
+                            <td>Church Goods Inc.</td>
+                            <td>800.00</td>
+                            <td>8</td>
+                            <td>pcs</td>
+                            <td>In stock</td>
+                        </tr>
+                        <tr>
+                            <td>018</td>
+                            <td>2025-01-06</td>
+                            <td>1018</td>
+                            <td>Lectern</td>
+                            <td>Non-consumable</td>
+                            <td>Woodworks Ltd.</td>
+                            <td>18,000.00</td>
+                            <td>1</td>
+                            <td>pcs</td>
+                            <td>Damaged</td>
+                        </tr>
+                        <tr>
+                            <td>019</td>
+                            <td>2025-01-09</td>
+                            <td>1019</td>
+                            <td>Prayer Book</td>
+                            <td>Non-consumable</td>
+                            <td>Liturgical Press</td>
+                            <td>300.00</td>
+                            <td>40</td>
+                            <td>pcs</td>
+                            <td>Used</td>
+                        </tr>
+                        <tr>
+                            <td>020</td>
+                            <td>2025-01-10</td>
+                            <td>1020</td>
+                            <td>Communion Tray</td>
+                            <td>Non-consumable</td>
+                            <td>Church Goods Inc.</td>
+                            <td>1,500.00</td>
+                            <td>5</td>
+                            <td>pcs</td>
+                            <td>In stock</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        //Dropdown for Report navbar
+        function myFunction() {
+            document.getElementById("myDropdown").classList.toggle("show");
+        }
+
+        // Close the dropdown menu if the user clicks outside of it
+        window.onclick = function(event) {
+            if (!event.target.matches('.option5') && !event.target.matches('.another-class')) {
+        var dropdowns = document.getElementsByClassName(".dropbtn");
+        var i;
+        for (i = 0; i < dropdowns.length; i++) {
+            var openDropdown = dropdowns[i];
+            if (openDropdown.classList.contains('show')) {
+            openDropdown.classList.remove('show');
+            }
+        }
+        }
+        }
+
+        // Dropdown for Sorting
+        document.querySelectorAll('.sortDrop-input, .filterDrop-input').forEach(input => {
+        input.addEventListener('click', function () {
+            const closestDropdown = this.closest('.sortDrop') || this.closest('.filterDrop');
+            if (closestDropdown) {
+            closestDropdown.classList.toggle('open');
+            }
+        });
+        });
+
+        // Add event listeners to dropdown content items
+        document.querySelectorAll('.sortDrop-content a, .filterDrop-content a').forEach(item => {
+        item.addEventListener('click', function (e) {
+            e.preventDefault(); // Prevent default link behavior
+
+            const selectedValue = this.textContent;
+            const closestDropdown = this.closest('.sortDrop') || this.closest('.filterDrop');
+
+            if (closestDropdown) {
+                const input = closestDropdown.querySelector('.sortDrop-input, .filterDrop-input');
+            if (input) {
+                input.value = selectedValue; // put selected value to the input box
+            }
+            closestDropdown.classList.remove('open'); // dropdown close
+            }
+
+        console.log('Selected value:', selectedValue); // logging the choice
+        });
+        });
+    </script>
+    <script src="./invenSummaryDownload.js"></script>
+</body>
+</html> 
